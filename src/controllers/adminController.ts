@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import * as AdminService from "./../services/adminService";
+import * as AdminService from "../services/AdminService";
 export const getUsers = async (req: Request, res: Response) => {
   AdminService.getAllUser(req, res);
 };

@@ -15,7 +15,16 @@ export const Users = sequelize.define(
     lastName: {
       type: DataTypes.STRING,
     },
-    userRole: {
+    role: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
+    },
+    createdAt: {
+      type: DataTypes.STRING,
+    },
+    password: {
       type: DataTypes.STRING,
     },
   },

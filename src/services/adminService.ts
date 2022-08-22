@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Users } from "./../models/UsersModel";
-import validateError from "./../utils";
-
+import { Users } from "../models/UsersModel";
+import validateError from "../utils";
+import bcrypt from "bcryptjs";
 export const getAllUser = async (_req: Request, res: Response) => {
   try {
     const allUsers = await Users.findAll();
@@ -14,12 +14,15 @@ export const getAllUser = async (_req: Request, res: Response) => {
 
 export const setUser = async (req: Request, res: Response) => {
   try {
-    const { name, lastName, userRole } = req.body;
+    const { name, lastName, role, email, password } = req.body;
 
+    const bcryptPassword = bcrypt.hashSync(password, 10);
     await Users.create({
       name,
       lastName,
-      userRole,
+      role,
+      password: bcryptPassword,
+      email,
     });
 
     res.status(200).json({ message: "User successfuly created" });
