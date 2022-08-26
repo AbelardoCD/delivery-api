@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { Users } from "../models/UsersModel";
+import Users from "../models/UsersModel";
 import validateError from "../utils";
 import bcrypt from "bcryptjs";
+import Restaurants, { RestaurantsAttributes } from "../models/RestarantsModel";
 export const getAllUser = async (_req: Request, res: Response) => {
   try {
     const allUsers = await Users.findAll();
@@ -13,16 +14,20 @@ export const getAllUser = async (_req: Request, res: Response) => {
 };
 
 export const setUser = async (req: Request, res: Response) => {
+  console.log("here");
+
   try {
-    const { name, lastName, role, email, password } = req.body;
+    const { name, lastName, role, email, password, createdAt } = req.body;
 
     const bcryptPassword = bcrypt.hashSync(password, 10);
+
     await Users.create({
       name,
       lastName,
+      email,
       role,
       password: bcryptPassword,
-      email,
+      createdAt,
     });
 
     res.status(200).json({ message: "User successfuly created" });
@@ -64,6 +69,49 @@ export const updateUser = async (req: Request, res: Response) => {
     res
       .status(200)
       .json({ message: "User Succesffuly removed", record: update });
+  } catch (error) {
+    res.status(400).json({ message: validateError(error) });
+  }
+};
+
+export const getAllRestaurants = async (_req: Request, res: Response) => {
+  try {
+    const allRestaurants: Restaurants[] = await Restaurants.findAll();
+
+    res.json(allRestaurants).status(200);
+  } catch (err) {
+    res.status(400).json({ message: validateError(err) });
+  }
+};
+
+export const getRestaurant = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const allRestaurant: Restaurants[] = await Restaurants.findAll({
+      where: { idUser: id },
+    });
+
+    res.json(allRestaurant).status(200);
+  } catch (err) {
+    res.status(400).json({ message: validateError(err) });
+  }
+};
+
+export const setRestaurant = async (req: Request, res: Response) => {
+  try {
+    const { closeHour, location, name, openHour, phone, idUser } =
+      req.body as RestaurantsAttributes;
+
+    await Restaurants.create({
+      closeHour,
+      location,
+      name,
+      openHour,
+      phone,
+      idUser,
+    });
+
+    res.status(200).json({ message: "Restaurant successfuly created" });
   } catch (error) {
     res.status(400).json({ message: validateError(error) });
   }

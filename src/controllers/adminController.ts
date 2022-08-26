@@ -16,3 +16,13 @@ export const removeUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   AdminService.updateUser(req, res);
 };
+
+export const getRestaurants = async (req: Request, res: Response) => {
+  AdminService.getAllRestaurants(req, res);
+};
+export const getRestaurant = async (req: Request, res: Response) => {
+  AdminService.getRestaurant(req, res);
+};
+export const setRestaurant = async (req: Request, res: Response) => {
+  AdminService.setRestaurant(req, res);
+};

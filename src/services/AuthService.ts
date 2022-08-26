@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
-import { Users } from "../models/UsersModel";
+import Users from "../models/UsersModel";
 import validateError from "../utils";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const Authetication = async (req: Request, res: Response) => {
   try {
-    console.log(req.body.password);
     const { email, password } = req.body;
-    const user = await Users.findOne({
+    const user: Users | null = await Users.findOne({
       where: { email: email },
     });
+    console.log(user);
 
     //console.log(user);
 
@@ -28,7 +28,6 @@ export const Authetication = async (req: Request, res: Response) => {
       (_err, token) => {
         res.send({
           token,
-          user,
         });
       }
     );
@@ -37,6 +36,6 @@ export const Authetication = async (req: Request, res: Response) => {
   }
 };
 
-function validatePassword(user: any, password: string) {
+function validatePassword(user: Users, password: string) {
   return bcrypt.compareSync(password, user.password);
 }

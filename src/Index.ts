@@ -7,8 +7,6 @@ import { sequelize } from "./database/database";
 
 const PORT = 3000;
 
-//app.use("/api/admin", adminRoutes);
-
 async function mainFuncion() {
   try {
     await sequelize.sync({ force: false });
