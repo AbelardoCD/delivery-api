@@ -5,7 +5,7 @@ import { sequelize } from "./database/database";
 // se importan los modelos para que se creen las tablas
 //import "./models/UsersModel";
 
-const PORT = 3000;
+const PORT = 3001;
 
 async function mainFuncion() {
   try {

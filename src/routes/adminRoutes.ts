@@ -7,7 +7,7 @@ import {
   getRestaurants,
   setRestaurant,
   getRestaurant,
-} from "../controllers/adminController";
+} from "../controllers/AdminController";
 import * as AuthtenticationToken from "../AuthenticationJsonWebToken";
 const router = express.Router();
 
