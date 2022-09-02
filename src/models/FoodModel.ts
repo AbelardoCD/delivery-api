@@ -18,6 +18,25 @@ class Food extends Model<FoodAttributes, UserCreationAttributes> {
   declare description: string;
   declare urlImagen: string;
   declare idRestaurant: number;
+
+  get getName(): string {
+    return this.name;
+  }
+
+  public setName(name: string) {
+    this.name = name;
+  }
+
+  public setDescription(description: string) {
+    this.description = description;
+  }
+
+  public setUrlImage(urlImage: string) {
+    this.urlImagen = urlImage;
+  }
+  public setIdRestaurante(id: number) {
+    this.idRestaurant = id;
+  }
 }
 
 Food.init(

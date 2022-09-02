@@ -14,7 +14,7 @@ export const getAllUser = async (_req: Request, res: Response) => {
 };
 
 export const setUser = async (req: Request, res: Response) => {
-  console.log("here");
+  console.log("set users");
 
   try {
     const { name, lastName, role, email, password, createdAt } = req.body;
