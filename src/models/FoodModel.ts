@@ -5,6 +5,7 @@ export type FoodAttributes = {
   name: string;
   description: string;
   urlImagen: string;
+  price: number;
   idRestaurant: number;
 };
 
@@ -18,6 +19,7 @@ class Food extends Model<FoodAttributes, UserCreationAttributes> {
   declare description: string;
   declare urlImagen: string;
   declare idRestaurant: number;
+  declare price: number;
 
   get getName(): string {
     return this.name;
@@ -36,6 +38,9 @@ class Food extends Model<FoodAttributes, UserCreationAttributes> {
   }
   public setIdRestaurante(id: number) {
     this.idRestaurant = id;
+  }
+  public setPrice(price: number) {
+    this.price = price;
   }
 }
 
@@ -61,11 +66,14 @@ Food.init(
     idRestaurant: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
+    price: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     timestamps: false,
     tableName: "food",
-    sequelize, // passing the `sequelize` instance is required
+    sequelize,
   }
 );
 

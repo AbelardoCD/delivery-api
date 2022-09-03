@@ -26,3 +26,11 @@ export const getRestaurant = async (req: Request, res: Response) => {
 export const setRestaurant = async (req: Request, res: Response) => {
   AdminService.setRestaurant(req, res);
 };
+
+export const getFood = async (req: Request, res: Response) => {
+  AdminService.getFood(req, res);
+};
+
+export const getFoods = async (req: Request, res: Response) => {
+  AdminService.getFoods(req, res);
+};

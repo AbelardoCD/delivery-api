@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import Users from "../models/UsersModel";
-import validateError from "../utils";
+import { validateError, encodeToBase64 } from "../utils";
 import bcrypt from "bcryptjs";
 import Restaurants, { RestaurantsAttributes } from "../models/RestarantsModel";
+import Food from "../models/FoodModel";
+import { foodObjectInterface } from "../interfaces/foodObjectInterface";
+
 export const getAllUser = async (_req: Request, res: Response) => {
   try {
     const allUsers = await Users.findAll();
@@ -77,7 +80,6 @@ export const updateUser = async (req: Request, res: Response) => {
 export const getAllRestaurants = async (_req: Request, res: Response) => {
   try {
     const allRestaurants: Restaurants[] = await Restaurants.findAll();
-
     res.json(allRestaurants).status(200);
   } catch (err) {
     res.status(400).json({ message: validateError(err) });
@@ -114,5 +116,59 @@ export const setRestaurant = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Restaurant successfuly created" });
   } catch (error) {
     res.status(400).json({ message: validateError(error) });
+  }
+};
+
+export const getFood = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const food: Food | null = await Food.findOne({
+      where: { id: id },
+    });
+
+    if (food === null) {
+      throw new Error("Food not found");
+    }
+    let foodObject: foodObjectInterface = {
+      food: {} as Food,
+      imageBase64: { base: "", name: "" },
+    };
+
+    await encodeToBase64(food!.urlImagen).then((resp: any) => {
+      foodObject = {
+        food: food,
+        imageBase64: { base: resp, name: food.urlImagen.split("\\")[1] },
+      };
+    });
+
+    res.status(200).json({ food: foodObject });
+  } catch (err) {
+    res.status(400).json({ message: validateError(err) });
+  }
+};
+
+export const getFoods = async (_req: Request, res: Response) => {
+  try {
+    const foodAll: Food[] = await Food.findAll();
+
+    let arrayFood: foodObjectInterface[] = [];
+
+    if (foodAll.length > 0) {
+      for (let i = 0; i < foodAll.length; i++) {
+        await encodeToBase64(foodAll[i].urlImagen).then((resp: any) => {
+          arrayFood.push({
+            food: foodAll[i],
+            imageBase64: {
+              base: resp,
+              name: foodAll[i].urlImagen.split("\\")[1],
+            },
+          });
+        });
+      }
+    }
+
+    res.status(200).json({ foodAll: arrayFood });
+  } catch (err) {
+    res.status(400).json({ message: validateError(err) });
   }
 };

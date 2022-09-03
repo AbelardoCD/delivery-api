@@ -7,9 +7,11 @@ import {
   getRestaurants,
   setRestaurant,
   getRestaurant,
+  getFood,
+  getFoods,
 } from "../controllers/AdminController";
 import * as AuthtenticationToken from "../AuthenticationJsonWebToken";
-import { upload, uploadFile } from "../services/UploadFile";
+import { upload, setFood } from "../services/UploadFile";
 const router = express.Router();
 
 router.get("/users", AuthtenticationToken.verifyToken, getUsers);
@@ -21,5 +23,7 @@ router.get("/restaurants", getRestaurants);
 router.get("/restaurants/:id", getRestaurant);
 router.post("/restaurants", setRestaurant);
 
-router.post("/uploadFile", upload, uploadFile);
+router.post("/food", upload, setFood);
+router.get("/food/:id", getFood);
+router.get("/food", getFoods);
 export default router;
