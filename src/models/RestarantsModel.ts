@@ -9,10 +9,9 @@ export type RestaurantsAttributes = {
   closeHour: string;
   phone: string;
   idUser: number;
+  urlImage: string;
 };
 
-// we're telling the Model that 'id' is optional
-// when creating an instance of the model (such as using Model.create()).
 type UserCreationAttributes = Optional<RestaurantsAttributes, "id">;
 
 class Restaurants extends Model<RestaurantsAttributes, UserCreationAttributes> {
@@ -23,6 +22,32 @@ class Restaurants extends Model<RestaurantsAttributes, UserCreationAttributes> {
   declare closeHour: string;
   declare phone: string;
   declare idUser: number;
+  declare urlImage: string;
+
+  public setName(name: string) {
+    this.name = name;
+  }
+
+  public setLocation(location: string) {
+    this.location = location;
+  }
+
+  public setopenHour(openHour: string) {
+    this.openHour = openHour;
+  }
+  public setCloseHour(closeHour: string) {
+    this.closeHour = closeHour;
+  }
+  public setPhone(phone: string) {
+    this.phone = phone;
+  }
+
+  public setIdUser(idUser: number) {
+    this.idUser = idUser;
+  }
+  public setUrlImage(urlImage: string) {
+    this.urlImage = urlImage;
+  }
 }
 
 Restaurants.init(
@@ -52,6 +77,10 @@ Restaurants.init(
       type: DataTypes.INTEGER.UNSIGNED,
     },
     phone: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+    urlImage: {
       type: new DataTypes.STRING(128),
       allowNull: false,
     },

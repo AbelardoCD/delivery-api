@@ -11,7 +11,8 @@ import {
   getFoods,
 } from "../controllers/AdminController";
 import * as AuthtenticationToken from "../AuthenticationJsonWebToken";
-import { upload, setFood } from "../services/UploadFile";
+import { upload } from "../services/UploadFile";
+import { setFood } from "../services/AdminService";
 const router = express.Router();
 
 router.get("/users", AuthtenticationToken.verifyToken, getUsers);
@@ -21,7 +22,7 @@ router.put("/users/:id", updateUser);
 
 router.get("/restaurants", getRestaurants);
 router.get("/restaurants/:id", getRestaurant);
-router.post("/restaurants", setRestaurant);
+router.post("/restaurants", upload, setRestaurant);
 
 router.post("/food", upload, setFood);
 router.get("/food/:id", getFood);

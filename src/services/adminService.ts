@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Users from "../models/UsersModel";
 import { validateError, encodeToBase64 } from "../utils";
 import bcrypt from "bcryptjs";
-import Restaurants, { RestaurantsAttributes } from "../models/RestarantsModel";
+import Restaurants from "../models/RestarantsModel";
 import Food from "../models/FoodModel";
 import { foodObjectInterface } from "../interfaces/foodObjectInterface";
 
@@ -100,9 +100,28 @@ export const getRestaurant = async (req: Request, res: Response) => {
 };
 
 export const setRestaurant = async (req: Request, res: Response) => {
+  let restaurant = new Restaurants();
+  restaurant.setName(req.body.name);
+  restaurant.setLocation(req.body.location);
+  restaurant.setopenHour(req.body.openHour);
+  restaurant.setCloseHour(req.body.closeHour);
+  restaurant.setPhone(req.body.phone);
+  restaurant.setIdUser(req.body.idUser);
+  console.log(req.file);
+
+  if (req.file !== undefined) {
+    restaurant.setUrlImage(req.file?.path);
+  } else {
+    restaurant.setUrlImage("uploads/error-uploading-image.png");
+  }
+
+  saveRestaurant(restaurant, res);
+};
+
+const saveRestaurant = async (restaurant: Restaurants, res: Response) => {
   try {
-    const { closeHour, location, name, openHour, phone, idUser } =
-      req.body as RestaurantsAttributes;
+    const { closeHour, location, name, openHour, phone, idUser, urlImage } =
+      restaurant;
 
     await Restaurants.create({
       closeHour,
@@ -111,6 +130,7 @@ export const setRestaurant = async (req: Request, res: Response) => {
       openHour,
       phone,
       idUser,
+      urlImage,
     });
 
     res.status(200).json({ message: "Restaurant successfuly created" });
@@ -170,5 +190,38 @@ export const getFoods = async (_req: Request, res: Response) => {
     res.status(200).json({ foodAll: arrayFood });
   } catch (err) {
     res.status(400).json({ message: validateError(err) });
+  }
+};
+
+export const setFood = (req: Request, res: Response) => {
+  let food = new Food();
+  food.setName(req.body.name);
+  food.setDescription(req.body.description);
+
+  if (req.file !== undefined) {
+    food.setUrlImage(req.file?.path);
+  } else {
+    food.setUrlImage("uploads/error-uploading-image.png");
+  }
+  food.setPrice(req.body.price);
+  food.setIdRestaurante(req.body.idRestaurant);
+
+  saveFood(food, res);
+};
+
+const saveFood = async (food: Food, res: Response) => {
+  const { name, description, urlImagen, idRestaurant, price } = food;
+  try {
+    await Food.create({
+      name,
+      description,
+      urlImagen,
+      idRestaurant,
+      price,
+    });
+
+    res.status(200).json({ message: "User successfuly created" });
+  } catch (error) {
+    res.status(400).json({ message: validateError(error) });
   }
 };
