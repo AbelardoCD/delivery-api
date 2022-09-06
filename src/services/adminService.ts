@@ -4,7 +4,10 @@ import { validateError, encodeToBase64 } from "../utils";
 import bcrypt from "bcryptjs";
 import Restaurants from "../models/RestarantsModel";
 import Food from "../models/FoodModel";
-import { foodObjectInterface } from "../interfaces/foodObjectInterface";
+import {
+  foodObjectInterface,
+  RestaurantsObjectInterface,
+} from "../interfaces/foodObjectInterface";
 
 export const getAllUser = async (_req: Request, res: Response) => {
   try {
@@ -80,7 +83,22 @@ export const updateUser = async (req: Request, res: Response) => {
 export const getAllRestaurants = async (_req: Request, res: Response) => {
   try {
     const allRestaurants: Restaurants[] = await Restaurants.findAll();
-    res.json(allRestaurants).status(200);
+
+    let arrayRestaurantsArray: RestaurantsObjectInterface[] = [];
+    if (allRestaurants.length > 0) {
+      for (let i = 0; i < allRestaurants.length; i++) {
+        await encodeToBase64(allRestaurants[i].urlImage).then((resp: any) => {
+          arrayRestaurantsArray.push({
+            food: allRestaurants[i],
+            imageBase64: {
+              base: resp,
+              name: allRestaurants[i].urlImage.split("\\")[1],
+            },
+          });
+        });
+      }
+    }
+    res.json(arrayRestaurantsArray).status(200);
   } catch (err) {
     res.status(400).json({ message: validateError(err) });
   }
@@ -93,7 +111,21 @@ export const getRestaurant = async (req: Request, res: Response) => {
       where: { idUser: id },
     });
 
-    res.json(allRestaurant).status(200);
+    let arrayRestaurants: RestaurantsObjectInterface[] = [];
+    if (allRestaurant.length > 0) {
+      for (let i = 0; i < allRestaurant.length; i++) {
+        await encodeToBase64(allRestaurant[i].urlImage).then((resp: any) => {
+          arrayRestaurants.push({
+            food: allRestaurant[i],
+            imageBase64: {
+              base: resp,
+              name: allRestaurant[i].urlImage.split("\\")[1],
+            },
+          });
+        });
+      }
+    }
+    res.json(arrayRestaurants).status(200);
   } catch (err) {
     res.status(400).json({ message: validateError(err) });
   }
@@ -107,7 +139,6 @@ export const setRestaurant = async (req: Request, res: Response) => {
   restaurant.setCloseHour(req.body.closeHour);
   restaurant.setPhone(req.body.phone);
   restaurant.setIdUser(req.body.idUser);
-  console.log(req.file);
 
   if (req.file !== undefined) {
     restaurant.setUrlImage(req.file?.path);

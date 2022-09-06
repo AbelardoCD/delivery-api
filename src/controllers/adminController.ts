@@ -24,6 +24,8 @@ export const getRestaurant = async (req: Request, res: Response) => {
   AdminService.getRestaurant(req, res);
 };
 export const setRestaurant = async (req: Request, res: Response) => {
+  console.log(req);
+
   AdminService.setRestaurant(req, res);
 };
 
